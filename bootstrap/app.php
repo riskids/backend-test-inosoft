@@ -1,6 +1,8 @@
 <?php
 
-use App\Exceptions\Domain\ModelNotFoundException;
+use App\Exceptions\Domain\InvalidPickupStatusException;
+use App\Exceptions\Domain\SafetyCheckRequiredException;
+use App\Exceptions\Domain\UnpaidPaymentExistsException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -38,8 +40,6 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // Model not found / route not found → 404 with the ApiResponse envelope.
-        // Note: SubstituteBindings middleware converts model-lookup failures into
-        // NotFoundHttpException, so we catch both types.
         $exceptions->render(function (
             \Illuminate\Database\Eloquent\ModelNotFoundException |
             \Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e,
@@ -51,6 +51,40 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Resource not found.',
                     'errors'  => null,
                 ], 404);
+            }
+            return null;
+        });
+
+        // Domain exceptions → appropriate status codes
+        $exceptions->render(function (UnpaidPaymentExistsException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                    'errors'  => null,
+                ], 422);
+            }
+            return null;
+        });
+
+        $exceptions->render(function (InvalidPickupStatusException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                    'errors'  => null,
+                ], $e->getCode() ?: 409);
+            }
+            return null;
+        });
+
+        $exceptions->render(function (SafetyCheckRequiredException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                    'errors'  => null,
+                ], 422);
             }
             return null;
         });

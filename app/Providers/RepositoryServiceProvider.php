@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Repositories\Contracts\HouseholdRepositoryInterface;
 use App\Repositories\Eloquent\HouseholdRepository;
+use App\Repositories\Contracts\WasteRepositoryInterface;
+use App\Repositories\Eloquent\WasteRepository;
+use App\Repositories\Contracts\PaymentRepositoryInterface;
+use App\Repositories\Eloquent\PaymentRepository;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -19,6 +23,8 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public array $bindings = [
         HouseholdRepositoryInterface::class => HouseholdRepository::class,
+        WasteRepositoryInterface::class     => WasteRepository::class,
+        PaymentRepositoryInterface::class   => PaymentRepository::class,
     ];
 
     public function register(): void
