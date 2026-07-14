@@ -8,6 +8,8 @@ use App\Repositories\Contracts\WasteRepositoryInterface;
 use App\Repositories\Eloquent\WasteRepository;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 use App\Repositories\Eloquent\PaymentRepository;
+use App\Repositories\Contracts\ReportRepositoryInterface;
+use App\Repositories\Eloquent\ReportRepository;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -25,6 +27,7 @@ class RepositoryServiceProvider extends ServiceProvider
         HouseholdRepositoryInterface::class => HouseholdRepository::class,
         WasteRepositoryInterface::class     => WasteRepository::class,
         PaymentRepositoryInterface::class   => PaymentRepository::class,
+        ReportRepositoryInterface::class    => ReportRepository::class,
     ];
 
     public function register(): void

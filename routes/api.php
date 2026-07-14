@@ -24,4 +24,10 @@ Route::prefix('v1')->group(function () {
 
     Route::apiResource('payments', PaymentController::class)->only(['index', 'store']);
     Route::put('payments/{id}/confirm', [PaymentController::class, 'confirm']);
+
+    Route::prefix('reports')->group(function () {
+        Route::get('waste-summary', [App\Http\Controllers\Api\ReportController::class, 'wasteSummary']);
+        Route::get('payment-summary', [App\Http\Controllers\Api\ReportController::class, 'paymentSummary']);
+        Route::get('households/{id}/history', [App\Http\Controllers\Api\ReportController::class, 'householdHistory']);
+    });
 });
