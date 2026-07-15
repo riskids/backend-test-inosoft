@@ -4,11 +4,20 @@ namespace Tests\Feature;
 
 use App\Models\Household;
 use App\Models\Payment;
+use App\Models\User;
 use App\Models\Waste;
 
 describe('Pickup API', function () {
     beforeEach(function () {
         $this->baseUrl = '/api/v1/pickups';
+
+        // Create a user and authenticate for JWT-protected routes
+        $user = User::firstOrCreate(
+            ['email' => 'test@pickup-test.local'],
+            ['name' => 'Test User', 'password' => bcrypt('password')]
+        );
+        $token = auth('api')->login($user);
+        $this->withHeader('Authorization', 'Bearer ' . $token);
     });
 
     describe('POST /pickups', function () {

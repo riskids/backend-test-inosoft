@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Household;
 use App\Models\Payment;
+use App\Models\User;
 use App\Models\Waste;
 use Illuminate\Database\Seeder;
 
@@ -11,6 +12,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Create a default user for JWT authentication
+        User::firstOrCreate(
+            ['email' => 'admin@waste-collection.local'],
+            [
+                'name'     => 'Admin',
+                'password' => bcrypt('password'),
+            ]
+        );
+
         // Create households
         $households = [
             [

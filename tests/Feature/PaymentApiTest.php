@@ -4,10 +4,19 @@ namespace Tests\Feature;
 
 use App\Models\Household;
 use App\Models\Payment;
+use App\Models\User;
 
 describe('Payment API', function () {
     beforeEach(function () {
         $this->baseUrl = '/api/v1/payments';
+
+        // Create a user and authenticate for JWT-protected routes
+        $user = User::firstOrCreate(
+            ['email' => 'test@payment-test.local'],
+            ['name' => 'Test User', 'password' => bcrypt('password')]
+        );
+        $token = auth('api')->login($user);
+        $this->withHeader('Authorization', 'Bearer ' . $token);
     });
 
     describe('POST /payments', function () {
