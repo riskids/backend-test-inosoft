@@ -22,24 +22,24 @@ class PickupController extends Controller
             $request->type,
             $request->only(['safety_check'])
         );
-        return ApiResponse::success('Pickup created', new WasteResource($waste), 201);
+        return ApiResponse::success(new WasteResource($waste), 'Pickup created', 201);
     }
 
     public function schedule(Request $request, string $id)
     {
         $waste = $this->wasteService->schedule($id, now()->addDay());
-        return ApiResponse::success('Pickup scheduled', new WasteResource($waste));
+        return ApiResponse::success(new WasteResource($waste), 'Pickup scheduled');
     }
 
     public function complete(string $id)
     {
         $waste = $this->wasteService->complete($id);
-        return ApiResponse::success('Pickup completed', new WasteResource($waste));
+        return ApiResponse::success(new WasteResource($waste), 'Pickup completed');
     }
 
     public function cancel(string $id)
     {
         $waste = $this->wasteService->cancel($id);
-        return ApiResponse::success('Pickup canceled', new WasteResource($waste));
+        return ApiResponse::success(new WasteResource($waste), 'Pickup canceled');
     }
 }

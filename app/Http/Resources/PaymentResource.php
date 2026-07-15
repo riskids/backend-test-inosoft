@@ -9,12 +9,14 @@ class PaymentResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id'           => $this->_id,
+            '_id'          => (string) $this->getKey(),
+            'id'           => (string) $this->getKey(),
             'household_id' => $this->household_id,
             'amount'       => $this->amount,
             'status'       => $this->status,
-            'payment_date' => $this->payment_date,
-            'created_at'   => $this->created_at,
+            'payment_date' => $this->payment_date?->toIso8601String(),
+            'created_at'   => $this->created_at?->toIso8601String(),
+            'updated_at'   => $this->updated_at?->toIso8601String(),
         ];
     }
 }

@@ -17,6 +17,7 @@ class HouseholdResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            '_id'        => (string) $this->getKey(),
             'id'         => (string) $this->getKey(),
             'owner_name' => $this->owner_name,
             'address'    => $this->address,

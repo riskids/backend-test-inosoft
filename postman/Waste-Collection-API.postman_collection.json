@@ -1,0 +1,349 @@
+{
+  "info": {
+    "name": "Waste Collection API",
+    "description": "Postman collection for the Community Waste Collection API - PT Inosoft Trans Sistem Backend Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v1",
+      "type": "string"
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (responseCode.code === 201 || responseCode.code === 200) {",
+          "    var jsonData = JSON.parse(responseBody);",
+          "    if (jsonData.data && jsonData.data._id) {",
+          "        pm.collectionVariables.set('last_id', jsonData.data._id);",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Households",
+      "item": [
+        {
+          "name": "Create Household",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/households",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"owner_name\": \"John Doe\",\n    \"address\": \"123 Main Street, Jakarta\",\n    \"block\": \"A\",\n    \"no\": \"10\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Households",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/households",
+              "host": ["{{base_url}}"],
+              "path": ["households"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Household",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/households/{{household_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["households", "{{household_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Household",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/households/{{household_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["households", "{{household_id}}"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"owner_name\": \"Updated Name\",\n    \"address\": \"456 Updated Street\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Household",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/households/{{household_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["households", "{{household_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pickups",
+      "item": [
+        {
+          "name": "Create Pickup",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/pickups",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"household_id\": \"{{household_id}}\",\n    \"type\": \"organic\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Schedule Pickup",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/pickups/{{waste_id}}/schedule",
+              "host": ["{{base_url}}"],
+              "path": ["pickups", "{{waste_id}}", "schedule"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"pickup_date\": \"2026-07-20T10:00:00Z\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Pickup",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/pickups/{{waste_id}}/complete",
+              "host": ["{{base_url}}"],
+              "path": ["pickups", "{{waste_id}}", "complete"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Pickup",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/pickups/{{waste_id}}/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["pickups", "{{waste_id}}", "cancel"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/payments",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"household_id\": \"{{household_id}}\",\n    \"amount\": 50000,\n    \"payment_date\": \"2026-07-15T10:00:00Z\",\n    \"status\": \"pending\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Payments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/payments",
+              "host": ["{{base_url}}"],
+              "path": ["payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Payment",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/payments/{{payment_id}}/confirm",
+              "host": ["{{base_url}}"],
+              "path": ["payments", "{{payment_id}}", "confirm"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Waste Summary",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/reports/waste-summary",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "waste-summary"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Summary",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/reports/payment-summary",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "payment-summary"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Household History",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/reports/households/{{household_id}}/history",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "households", "{{household_id}}", "history"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Error Cases",
+      "item": [
+        {
+          "name": "Create pickup with unpaid payment (should fail 422)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/pickups",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"household_id\": \"{{unpaid_household_id}}\",\n    \"type\": \"organic\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Schedule electronic without safety check (should fail 422)",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/pickups/{{electronic_waste_id}}/schedule",
+              "host": ["{{base_url}}"],
+              "path": ["pickups", "{{electronic_waste_id}}", "schedule"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"pickup_date\": \"2026-07-20T10:00:00Z\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Schedule non-pending pickup (should fail 409)",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/pickups/{{scheduled_waste_id}}/schedule",
+              "host": ["{{base_url}}"],
+              "path": ["pickups", "{{scheduled_waste_id}}", "schedule"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"pickup_date\": \"2026-07-20T10:00:00Z\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel completed pickup (should fail 409)",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/pickups/{{completed_waste_id}}/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["pickups", "{{completed_waste_id}}", "cancel"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

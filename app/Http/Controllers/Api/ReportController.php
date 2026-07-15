@@ -15,16 +15,16 @@ class ReportController extends Controller
 
     public function wasteSummary(): JsonResponse
     {
-        return ApiResponse::success('Waste summary report', $this->reportService->getWasteSummary());
+        return ApiResponse::success($this->reportService->getWasteSummary(), 'Waste summary report');
     }
 
     public function paymentSummary(): JsonResponse
     {
-        return ApiResponse::success('Payment summary report', $this->reportService->getPaymentSummary());
+        return ApiResponse::success($this->reportService->getPaymentSummary(), 'Payment summary report');
     }
 
     public function householdHistory(string $id): JsonResponse
     {
-        return ApiResponse::success('Household history report', $this->reportService->getHouseholdHistory($id));
+        return ApiResponse::success($this->reportService->getHouseholdHistory($id), 'Household history report');
     }
 }

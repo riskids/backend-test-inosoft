@@ -20,7 +20,8 @@ class WasteRepository implements WasteRepositoryInterface
     public function update(Waste $waste, array $attributes): Waste
     {
         $waste->update($attributes);
-        return $waste->fresh();
+        $fresh = $waste->fresh();
+        return $fresh ?? $waste;
     }
 
     public function delete(string $id): bool

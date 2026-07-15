@@ -6,6 +6,7 @@ use App\Models\Waste\WasteElectronic;
 use App\Models\Waste\WasteOrganic;
 use App\Models\Waste\WastePaper;
 use App\Models\Waste\WastePlastic;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Eloquent\Model;
 
 /**
@@ -18,6 +19,7 @@ use MongoDB\Laravel\Eloquent\Model;
  */
 class Waste extends Model
 {
+    use HasFactory;
     protected $connection = 'mongodb';
     protected $collection = 'wastes';
 
