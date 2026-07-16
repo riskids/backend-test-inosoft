@@ -23,7 +23,9 @@ composer install
 Copy `.env.example` to `.env` and update:
 
 ```env
-MONGODB_URI=mongodb://localhost:27017
+DB_CONNECTION=mongodb
+MONGODB_HOST=127.0.0.1
+MONGODB_PORT=27017
 MONGODB_DATABASE=waste_collection
 ```
 
@@ -35,7 +37,13 @@ Or use Docker (see below).
 php artisan key:generate
 ```
 
-### 4. Seed Database (Optional)
+### 4. Run Migrations
+
+```bash
+php artisan migrate
+```
+
+### 5. Seed Database (Optional)
 
 ```bash
 php artisan db:seed
@@ -43,7 +51,7 @@ php artisan db:seed
 
 This creates sample households with mixed waste types and payments for testing.
 
-### 5. Start Server
+### 6. Start Server
 
 ```bash
 php artisan serve
@@ -51,16 +59,68 @@ php artisan serve
 
 The API will be available at `http://localhost:8000/api/v1`
 
-## Docker Alternative
+## Docker Setup
+
+The fastest way to run the project is with Docker Compose. It starts:
+- `app` - PHP-FPM 8.4 with Laravel
+- `nginx` - Web server on port 8000
+- `mongo` - MongoDB 7.0
+
+### 1. Build and Start Containers
 
 ```bash
 docker compose up -d --build
 ```
 
-This starts:
-- `app` - PHP-FPM 8.4 with Laravel
-- `nginx` - Web server on port 8000
-- `mongo` - MongoDB 8.0
+The first build may take a few minutes because it installs Composer dependencies and the PHP MongoDB extension.
+
+### 2. What Happens Automatically
+
+The `app` container entrypoint will:
+1. Wait until MongoDB is healthy.
+2. Create `.env` from `.env.example` if it does not exist.
+3. Generate `APP_KEY` if missing.
+4. Generate `JWT_SECRET` if missing.
+5. Run `php artisan migrate --force`.
+6. Run `php artisan db:seed --force`.
+
+Wait ~10-15 seconds after `up` for migrations and seeding to finish.
+
+### 3. Verify the API
+
+```bash
+curl http://localhost:8000/api/v1/households
+```
+
+### 4. Useful Docker Commands
+
+```bash
+# View container logs
+docker compose logs -f app
+
+# Re-run migrations and seed fresh data
+docker compose exec app php artisan migrate:fresh --seed --force
+
+# Run tests inside the container
+docker compose exec app php artisan test
+
+# Run a one-off Artisan command
+docker compose exec app php artisan route:list
+
+# Stop everything
+docker compose down
+
+# Stop and remove all data volumes (fresh start)
+docker compose down -v
+```
+
+### 5. Re-seed After a Restart
+
+Data is persisted in the `mongo-data` Docker volume, so re-running `up` will not wipe the database. To seed again:
+
+```bash
+docker compose exec app php artisan db:seed --force
+```
 
 ## API Endpoints
 
