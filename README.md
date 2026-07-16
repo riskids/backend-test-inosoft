@@ -88,6 +88,14 @@ curl http://localhost:8000/api/v1/households
 http://localhost:8000/api/v1
 ```
 
+### Auth
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/login` | User login get a token |
+| POST | `/auth/register` | User register get a token |
+
+
 ### Households
 
 | Method | Endpoint | Description |
