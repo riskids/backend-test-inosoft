@@ -20,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Trim string inputs globally so accidental whitespace never breaks
         // search filters / uniqueness checks. Day-1 nicety; zero cost.
+        $middleware->redirectTo(
+            fn (Request $request) => $request->is('api/*') ? null : route('login')
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Every api/* request must come back as JSON, never an HTML error page.

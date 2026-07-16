@@ -9,6 +9,11 @@
       "key": "base_url",
       "value": "http://localhost:8000/api/v1",
       "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
     }
   ],
   "event": [
@@ -22,12 +27,70 @@
           "    if (jsonData.data && jsonData.data._id) {",
           "        pm.collectionVariables.set('last_id', jsonData.data._id);",
           "    }",
+          "    if (jsonData.data && jsonData.data.access_token) {",
+          "        pm.collectionVariables.set('token', jsonData.data.access_token);",
+          "    }",
           "}"
         ]
       }
     }
   ],
   "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"New User\",\n    \"email\": \"newuser@waste-collection.local\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@waste-collection.local\",\n    \"password\": \"password\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
     {
       "name": "Households",
       "item": [
@@ -121,6 +184,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               }
             ],
             "body": {
@@ -143,6 +210,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               }
             ],
             "body": {
@@ -160,7 +231,13 @@
               "raw": "{{base_url}}/pickups/{{waste_id}}/complete",
               "host": ["{{base_url}}"],
               "path": ["pickups", "{{waste_id}}", "complete"]
-            }
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
           },
           "response": []
         },
@@ -172,7 +249,13 @@
               "raw": "{{base_url}}/pickups/{{waste_id}}/cancel",
               "host": ["{{base_url}}"],
               "path": ["pickups", "{{waste_id}}", "cancel"]
-            }
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
           },
           "response": []
         }
@@ -190,6 +273,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               }
             ],
             "body": {
@@ -207,7 +294,13 @@
               "raw": "{{base_url}}/payments",
               "host": ["{{base_url}}"],
               "path": ["payments"]
-            }
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
           },
           "response": []
         },
@@ -219,7 +312,13 @@
               "raw": "{{base_url}}/payments/{{payment_id}}/confirm",
               "host": ["{{base_url}}"],
               "path": ["payments", "{{payment_id}}", "confirm"]
-            }
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
           },
           "response": []
         }
@@ -278,6 +377,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               }
             ],
             "body": {
@@ -300,6 +403,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               }
             ],
             "body": {
@@ -322,6 +429,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
               }
             ],
             "body": {
@@ -339,7 +450,13 @@
               "raw": "{{base_url}}/pickups/{{completed_waste_id}}/cancel",
               "host": ["{{base_url}}"],
               "path": ["pickups", "{{completed_waste_id}}", "cancel"]
-            }
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
           },
           "response": []
         }

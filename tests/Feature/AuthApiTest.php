@@ -10,6 +10,75 @@ describe('Auth API (JWT login)', function () {
         User::where('email', 'auth@test.local')->delete();
     });
 
+    describe('POST /auth/register', function () {
+        it('registers a new user and returns a JWT token', function () {
+            User::where('email', 'register@test.local')->delete();
+
+            $response = $this->postJson('/api/v1/auth/register', [
+                'name'                  => 'Registered User',
+                'email'                 => 'register@test.local',
+                'password'              => 'secret123',
+                'password_confirmation' => 'secret123',
+            ]);
+
+            $response->assertStatus(201)
+                ->assertJsonStructure([
+                    'success',
+                    'message',
+                    'data' => [
+                        'user' => [
+                            'id',
+                            'name',
+                            'email',
+                        ],
+                        'access_token',
+                        'token_type',
+                        'expires_in',
+                    ],
+                ])
+                ->assertJson([
+                    'success' => true,
+                    'data' => [
+                        'user' => [
+                            'name'  => 'Registered User',
+                            'email' => 'register@test.local',
+                        ],
+                        'token_type' => 'bearer',
+                    ],
+                ]);
+
+            expect($response->json('data.access_token'))->toBeString()->not->toBeEmpty();
+        });
+
+        it('validates registration fields', function () {
+            $response = $this->postJson('/api/v1/auth/register', [
+                'email' => 'not-an-email',
+            ]);
+
+            $response->assertStatus(422)
+                ->assertJsonStructure(['success', 'message', 'errors']);
+        });
+
+        it('rejects duplicate email addresses', function () {
+            User::where('email', 'duplicate@test.local')->delete();
+            User::create([
+                'name'     => 'Existing User',
+                'email'    => 'duplicate@test.local',
+                'password' => bcrypt('secret123'),
+            ]);
+
+            $response = $this->postJson('/api/v1/auth/register', [
+                'name'                  => 'Another User',
+                'email'                 => 'duplicate@test.local',
+                'password'              => 'secret123',
+                'password_confirmation' => 'secret123',
+            ]);
+
+            $response->assertStatus(422)
+                ->assertJsonStructure(['success', 'message', 'errors']);
+        });
+    });
+
     describe('POST /auth/login', function () {
         it('returns a JWT token for valid credentials', function () {
             User::create([
