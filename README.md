@@ -215,7 +215,3 @@ app/
 ├── Services/               # Business logic layer
 └── Providers/              # Service providers
 ```
-
-## License
-
-MIT License - PT Inosoft Trans Sistem Backend Test
