@@ -19,9 +19,8 @@ class WasteRepository implements WasteRepositoryInterface
 
     public function update(Waste $waste, array $attributes): Waste
     {
-        $waste->update($attributes);
-        $fresh = $waste->fresh();
-        return $fresh ?? $waste;
+        Waste::where('_id', $waste->getKey())->update($attributes);
+        return Waste::findOrFail($waste->getKey());
     }
 
     public function delete(string $id): bool
