@@ -15,17 +15,11 @@ if [ ! -f /var/www/.env ]; then
   cp /var/www/.env.example /var/www/.env
 fi
 
-# Generate app key if missing
-if ! grep -q "^APP_KEY=base64" /var/www/.env; then
-  echo "Generating application key..."
-  php /var/www/artisan key:generate --force
-fi
+echo "Generating application key..."
+php /var/www/artisan key:generate --force
 
-# Generate JWT secret if missing
-if ! grep -q "^JWT_SECRET=" /var/www/.env; then
-  echo "Generating JWT secret..."
-  php /var/www/artisan jwt:secret --force || true
-fi
+echo "Generating JWT secret..."
+php /var/www/artisan jwt:secret --force || true
 
 # Run migrations
 echo "Running migrations..."
